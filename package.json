@@ -1,6 +1,6 @@
 {
   "name": "koishi-plugin-nqblacklist",
-  "description": "NQ旗下的云黑插件，用于查询QQ号是否在云端黑名单中，并提供定时推送功能。",
+  "description": "NQ旗下的云黑插件,用于查询QQ号是否在云端黑名单中,并提供定时推送功能。",
   "version": "0.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
