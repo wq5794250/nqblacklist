@@ -1,6 +1,6 @@
 {
   "name": "koishi-plugin-nqblacklist",
-  "description": "NQ旗下的云黑插件",
+  "description": "NQ旗下的云黑插件，用于查询QQ号是否在云端黑名单中，并提供定时推送功能。",
   "version": "0.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -9,14 +9,29 @@
     "dist"
   ],
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "keywords": [
     "chatbot",
     "koishi",
-    "plugin"
+    "plugin",
+    "nqblacklist",
+    "cloud-blacklist",
+    "qq-blacklist"
   ],
-  "devDependencies": {},
+  "dependencies": {
+    "cron-parser": "^3.3.0",
+    "koishi-plugin-cron": "^3.1.0",
+    "koishi-plugin-markdown": "^4.0.0",
+    "@koishijs/plugin-http": "^4.0.0"
+  },
   "peerDependencies": {
     "koishi": "^4.18.3"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.2"
   }
 }
