@@ -5,8 +5,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
-    "lib",
-    "dist"
+    "lib"
   ],
   "license": "MIT",
   "scripts": {
@@ -23,15 +22,15 @@
     "qq-blacklist"
   ],
   "dependencies": {
-    "cron-parser": "^3.3.0",
+    "@koishijs/plugin-http": "^0.6.3",
+    "cron-parser": "^3.5.0",
     "koishi-plugin-cron": "^3.1.0",
-    "koishi-plugin-markdown": "^1.1.1",
-    "@koishijs/plugin-http": "^0.6.3"
+    "koishi-plugin-markdown": "^1.1.1"
   },
   "peerDependencies": {
-    "koishi": "^4.18.3"
+    "koishi": "^4.18.4"
   },
   "devDependencies": {
-    "typescript": "^4.5.2"
+    "typescript": "^4.9.5"
   }
 }
