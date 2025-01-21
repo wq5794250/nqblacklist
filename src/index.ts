@@ -1,7 +1,7 @@
 import { Context, Schema } from 'koishi';
 import { HTTP } from '@koishijs/plugin-http';
 import cron from 'koishi-plugin-cron';
-import parse from 'cron-parser';
+import { parseExpression } from 'cron-parser';
 
 export const name = 'nqblacklist';
 
@@ -85,10 +85,10 @@ export const Config: Schema<Config> = Schema.intersect([
 // 验证 cron 表达式
 function validateCronExpression(expression: string): boolean {
   try {
-    parse.parseExpression(expression);
+    parseExpression(expression);
     return true;
   } catch (error) {
-    console.error('无效的 cron 表达式:', error);
+    console.error('无效的 cron 表达式:', error.message);
     return false;
   }
 }
@@ -161,6 +161,9 @@ export function apply(ctx: Context, options: Config) {
   // 添加查云黑命令
   ctx.command('查云黑 <qq>', '查询QQ是否在云黑黑名单中')
     .action(async ({ session }, qq: string) => {
+      if (!qq) {
+        return '请输入要查询的 QQ 号。';
+      }
       try {
         const response = await ctx.http.get(`${apiEndpoint}?qq=${qq}`);
         const body = response.toString();
@@ -192,8 +195,8 @@ export function apply(ctx: Context, options: Config) {
       if (broad) {
         // 获取所有连接的机器人及其群组
         for (const bot of Object.values(ctx.bots)) {
-          const botId = bot.selfId;
-          const onebotApiBase = bot.config.apiRoot; // 假设 bot.config 中有 apiRoot 字段
+          const botId = (bot as any)?.selfId;
+          const onebotApiBase = (bot as any)?.config.apiRoot; // 假设 bot.config 中有 apiRoot 字段
           if (!onebotApiBase) {
             console.warn(`机器人 ${botId} 没有配置 OneBot API 端点`);
             continue;
@@ -202,8 +205,8 @@ export function apply(ctx: Context, options: Config) {
           const groupList = await getGroupList(ctx, botId, onebotApiBase);
           groupsToBroadcast.push(...groupList);
         }
-      } else {
-        groupsToBroadcast = broadArray?.map(item => item.groupId) ?? [];
+      } else if (broadArray) {
+        groupsToBroadcast = broadArray.map(item => item.groupId);
       }
 
       for (const groupId of groupsToBroadcast) {
@@ -211,8 +214,8 @@ export function apply(ctx: Context, options: Config) {
           // 获取群组对应的机器人 ID 和 OneBot API 端点
           const botInfo = broad
             ? {
-                botId: Object.values(ctx.bots)[0]?.selfId,
-                onebotApiBase: Object.values(ctx.bots)[0]?.config.apiRoot,
+                botId: (Object.values(ctx.bots)[0] as any)?.selfId,
+                onebotApiBase: (Object.values(ctx.bots)[0] as any)?.config.apiRoot,
               }
             : broadArray?.find(item => item.groupId === groupId);
 
@@ -238,7 +241,7 @@ export function apply(ctx: Context, options: Config) {
           }
 
           if (blacklistedMembers.length > 0) {
-            const message = blacklistedMembers.map((member, index) => `${index + 1}. @${member.card || member.nickname} (${member.user_id})`).join('\n');
+            const message = blacklistedMembers.map((member, index) => `${index + 1}. @${(member as any).card || (member as any).nickname} (${(member as any).user_id})`).join('\n');
             await ctx.http.post(`${botInfo.onebotApiBase}/send_group_msg`, {
               group_id: groupId,
               message: `当前发现本群内存在以下失信人员\n${message}\n可通过指令/查云黑 QQ号 进行详细查询!`

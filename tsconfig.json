@@ -8,9 +8,9 @@
     "emitDeclarationOnly": true,
     "composite": true,
     "incremental": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true,  // 添加这一行
     "esModuleInterop": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "jsx": "react-jsx",
     "jsxImportSource": "@satorijs/element",
     "types": [
